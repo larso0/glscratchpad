@@ -47,7 +47,7 @@ void myapp::startup()
     glUniformMatrix4fv(modelview_location, 1, GL_FALSE, glm::value_ptr(view));
 
     GLint rotation_axis_location = program.get_uniform_location("rotation_axis");
-    GLfloat rotation_axis[] = {0.5f, 0.7f, 0.f};
+    GLfloat rotation_axis[] = {0.9f, 0.7f, 0.f};
     glUniform3fv(rotation_axis_location, 1, rotation_axis);
 }
 
