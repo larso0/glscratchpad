@@ -45,6 +45,10 @@ void myapp::startup()
     view = glm::lookAt(glm::vec3(0.f, 1.f, 3.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f));
     GLint modelview_location = program.get_uniform_location("modelview");
     glUniformMatrix4fv(modelview_location, 1, GL_FALSE, glm::value_ptr(view));
+
+    GLint rotation_axis_location = program.get_uniform_location("rotation_axis");
+    GLfloat rotation_axis[] = {0.5f, 0.7f, 0.f};
+    glUniform3fv(rotation_axis_location, 1, rotation_axis);
 }
 
 void myapp::shutdown()
@@ -64,11 +68,8 @@ void myapp::resize(int w, int h)
 
 void myapp::update(float delta)
 {
-    glm::mat4 modelview;
-    modelview = glm::rotate(modelview, current_time, glm::vec3(0.f, 1.f, 0.f));
-    modelview = view * modelview;
-    GLint modelview_location = program.get_uniform_location("modelview");
-    glUniformMatrix4fv(modelview_location, 1, GL_FALSE, glm::value_ptr(modelview));
+    GLint rotation_angle_location = program.get_uniform_location("rotation_angle");
+    glUniform1f(rotation_angle_location, current_time);
 
     glClearColor(0.f, 0.f, 0.f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
