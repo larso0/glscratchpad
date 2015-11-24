@@ -1,6 +1,9 @@
 #version 450
 
 in vec3 position;
+in vec3 normal;
+in vec2 uv;
+in vec4 color;
 
 uniform vec3 rotation_axis;
 uniform float rotation_angle;
