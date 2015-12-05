@@ -9,7 +9,7 @@
 #include <stdexcept>
 
 geometry::geometry() :
-    initialized(false), ibuffer(0), vbuffer(0)
+    initialized(false), vbuffer(0), ibuffer(0)
 {
 }
 
