@@ -17,6 +17,9 @@ myapp::myapp(int argc, char** argv) :
 
 void myapp::startup()
 {
+    //SDL_ShowCursor(0);
+    //SDL_SetRelativeMouseMode(SDL_TRUE);
+
     shader vshader("vshader.glsl", GL_VERTEX_SHADER);
     vshader.compile();
 
@@ -69,7 +72,7 @@ void myapp::resize(int w, int h)
 void myapp::update(float delta)
 {
     GLint rotation_angle_location = program.get_uniform_location("rotation_angle");
-    glUniform1f(rotation_angle_location, current_time);
+    glUniform1f(rotation_angle_location, rotation);
 
     glClearColor(0.f, 0.f, 0.f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -82,8 +85,35 @@ void myapp::update(float delta)
     swap_buffers();
 }
 
+void myapp::mouse_motion(SDL_MouseMotionEvent* event)
+{
+    if(mouse_button_down)
+    {
+        int x = event->xrel;
+        rotation += x / 1000.f;
+    }
+}
+
 void myapp::event(SDL_Event* event)
 {
+    switch(event->type)
+    {
+    case SDL_MOUSEMOTION:
+        mouse_motion(&event->motion);
+        break;
+    case SDL_MOUSEBUTTONDOWN:
+        if(event->button.button == SDL_BUTTON_LEFT)
+        {
+            mouse_button_down = true;
+        }
+        break;
+    case SDL_MOUSEBUTTONUP:
+        if(event->button.button == SDL_BUTTON_LEFT)
+        {
+            mouse_button_down = false;
+        }
+        break;
+    }
 }
 
 int main(int argc, char** argv)

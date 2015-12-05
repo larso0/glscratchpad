@@ -22,6 +22,7 @@ private:
     void shutdown();
     void resize(int w, int h);
     void update(float delta);
+    void mouse_motion(SDL_MouseMotionEvent* event);
     void event(SDL_Event* event);
 
     GLuint vao; //Vertex attribute object
@@ -51,6 +52,9 @@ private:
 
     glm::mat4 projection;
     glm::mat4 view;
+
+    float rotation = 0.f;
+    bool mouse_button_down = false;
 };
 
 #endif /* MYAPP_H_ */
