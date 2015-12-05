@@ -25,7 +25,7 @@ void geometry::initialize()
     glBindBuffer(GL_ARRAY_BUFFER, vbuffer);
     glBufferData(GL_ARRAY_BUFFER, vertices.size()*sizeof(glm::vec3), vertices.data(), GL_STATIC_DRAW);
 
-    glGenBuffers(1, &index_buffer);
+    glGenBuffers(1, &ibuffer);
     glBindBuffer(GL_ARRAY_BUFFER, ibuffer);
     glBufferData(GL_ARRAY_BUFFER, indices.size()*sizeof(GLushort), indices.data(), GL_STATIC_DRAW);
 }
