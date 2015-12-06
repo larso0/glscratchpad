@@ -14,7 +14,7 @@
 class material
 {
 public:
-    material(gltools::program& program);
+    material(gltools::program* program);
     virtual ~material();
 
     void use_program();
@@ -26,7 +26,7 @@ public:
     GLuint view_matrix_location() const;
     GLuint projection_matrix_location() const;
 private:
-    gltools::program& program;
+    gltools::program* program;
 
     //Attributes
     GLuint position;

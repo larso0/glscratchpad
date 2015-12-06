@@ -15,14 +15,14 @@
 class object : public scene_node
 {
 public:
-    object(geometry& geom, material& mater);
+    object(geometry* geom, material* mater);
     virtual ~object();
 
     void render();
 
 private:
-    geometry& geom;
-    material& mater;
+    geometry* geom;
+    material* mater;
 
     GLuint vertex_attribute_object;
 };

@@ -59,9 +59,9 @@ void myapp::startup()
     cube_geometry.face(1, 5, 6);
     cube_geometry.face(6, 2, 1);
 
-    material mat(program);
+    material mat(&program);
 
-    cube = new object(cube_geometry, mat);
+    cube = new object(&cube_geometry, &mat);
     myscene.add(cube); //Scene takes care of freeing the memory of cube
 
     glEnable(GL_DEPTH_TEST);

@@ -6,16 +6,21 @@
  */
 
 #include "material.h"
+#include <stdexcept>
 
-material::material(gltools::program& program) :
+material::material(gltools::program* program) :
     program(program)
 {
-    position = program.get_attribute_location("position");
-    normal = 0;//program.get_attribute_location("normal");
-    texture_coordinate = 0;//program.get_attribute_location("uv");
-    modelworld = program.get_uniform_location("modelworld");
-    view = program.get_uniform_location("view");
-    projection = program.get_uniform_location("projection");
+    if(program == nullptr)
+    {
+        throw std::invalid_argument("Program can not be a nullpointer.");
+    }
+    position = program->get_attribute_location("position");
+    normal = 0;//program->get_attribute_location("normal");
+    texture_coordinate = 0;//program->get_attribute_location("uv");
+    modelworld = program->get_uniform_location("modelworld");
+    view = program->get_uniform_location("view");
+    projection = program->get_uniform_location("projection");
 }
 
 material::~material()
@@ -24,7 +29,7 @@ material::~material()
 
 void material::use_program()
 {
-    program.use();
+    program->use();
 }
 
 GLuint material::position_location() const
