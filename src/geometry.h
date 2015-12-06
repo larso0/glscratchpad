@@ -12,6 +12,18 @@
 #include <vector>
 #include <cinttypes>
 
+class vertex
+{
+public:
+    glm::vec3 position;
+    glm::vec3 normal;
+    glm::vec2 uv;
+    static const size_t position_offset;
+    static const size_t normal_offset;
+    static const size_t uv_offset;
+    static const size_t stride;
+};
+
 class geometry
 {
 public:
@@ -20,22 +32,16 @@ public:
 
     void initialize();
 
-    void vertex(glm::vec3 v);
-    void face(GLushort a, GLushort b, GLushort c);
+    void add_vertex(vertex v);
 
-    size_t element_count() const;
+    size_t vertex_count() const;
     GLuint vertex_buffer() const;
-    GLuint index_buffer() const;
 protected:
-    std::vector<glm::vec3> vertices;
-    //TODO: std::vector<glm::vec3> normals;
-    //TODO: std::vector<glm::vec2> texture_coordinates;
-    std::vector<GLushort> indices;
+    std::vector<vertex> vertices;
 
 private:
     bool initialized;
     GLuint vbuffer;
-    GLuint ibuffer;
 };
 
 #endif /* SRC_GEOMETRY_H_ */

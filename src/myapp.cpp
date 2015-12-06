@@ -41,7 +41,7 @@ void myapp::startup()
     cube = new object(&cube_geom, &program);
     cube2 = new object(&cube_geom, &program);
     cube3 = new object(&cube_geom, &program);
-    myscene.add(cube); //Scene takes care of freeing the memory of cube
+    myscene.add(cube);
     cube->add(cube2);
     cube->add(cube3);
     cube2->scale(glm::vec3(0.5f, 2.f, 0.25f));
@@ -58,6 +58,9 @@ void myapp::startup()
 
 void myapp::shutdown()
 {
+    delete cube;
+    delete cube2;
+    delete cube3;
 }
 
 void myapp::resize(int w, int h)

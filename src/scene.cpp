@@ -21,10 +21,6 @@ scene_node::scene_node(scene_node* parent) :
 
 scene_node::~scene_node()
 {
-    for (scene_node* child : children)
-    {
-        delete child;
-    }
 }
 
 void scene_node::set_parent(scene_node* parent)

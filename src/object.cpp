@@ -14,7 +14,7 @@ object::object(geometry* geom, gltools::program* program) :
     program(program),
     position(0),
     normal(1),
-    texture_coordinate(2),
+    uv(2),
     modelworld(0),
     view(1),
     projection(2),
@@ -34,11 +34,13 @@ object::object(geometry* geom, gltools::program* program) :
 
     glBindVertexArray(vertex_attribute_object);
 
-    glEnableVertexAttribArray(position);
     glBindBuffer(GL_ARRAY_BUFFER, geom->vertex_buffer());
-    glVertexAttribPointer(position, 3, GL_FLOAT, false, 0, 0);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geom->index_buffer());
+    glEnableVertexAttribArray(position);
+    glVertexAttribPointer(position, 3, GL_FLOAT, false, vertex::stride, (GLvoid*)vertex::position_offset);
+    glEnableVertexAttribArray(normal);
+    glVertexAttribPointer(normal, 3, GL_FLOAT, false, vertex::stride, (GLvoid*)vertex::normal_offset);
+    glEnableVertexAttribArray(uv);
+    glVertexAttribPointer(uv, 2, GL_FLOAT, false, vertex::stride, (GLvoid*)vertex::uv_offset);
 
     glBindVertexArray(0);
 }
@@ -54,7 +56,7 @@ void object::render()
     glUniformMatrix4fv(modelworld,
             1, GL_FALSE, glm::value_ptr(world_matrix));
     glBindVertexArray(vertex_attribute_object);
-    glDrawElements(GL_TRIANGLES, geom->element_count(), GL_UNSIGNED_SHORT, 0);
+    glDrawArrays(GL_TRIANGLES, 0, geom->vertex_count());
     glBindVertexArray(0);
     scene_node::render();
 }

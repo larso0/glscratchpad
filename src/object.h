@@ -27,7 +27,7 @@ private:
     //Attributes
     GLuint position;
     GLuint normal;
-    GLuint texture_coordinate;
+    GLuint uv;
 
     //Uniforms
     GLuint modelworld;

@@ -8,15 +8,19 @@
 #include "geometry.h"
 #include <stdexcept>
 
+const size_t vertex::position_offset = 0;
+const size_t vertex::normal_offset = sizeof(glm::vec3);
+const size_t vertex::uv_offset = 2*sizeof(glm::vec3);
+const size_t vertex::stride = sizeof(vertex);
+
 geometry::geometry() :
-        initialized(false), vbuffer(0), ibuffer(0)
+        initialized(false), vbuffer(0)
 {
 }
 
 geometry::~geometry()
 {
     glDeleteBuffers(1, &vbuffer);
-    glDeleteBuffers(1, &ibuffer);
 }
 
 void geometry::initialize()
@@ -25,32 +29,20 @@ void geometry::initialize()
     {
         glGenBuffers(1, &vbuffer);
         glBindBuffer(GL_ARRAY_BUFFER, vbuffer);
-        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3),
+        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vertex),
                 vertices.data(), GL_STATIC_DRAW);
-
-        glGenBuffers(1, &ibuffer);
-        glBindBuffer(GL_ARRAY_BUFFER, ibuffer);
-        glBufferData(GL_ARRAY_BUFFER, indices.size() * sizeof(GLushort),
-                indices.data(), GL_STATIC_DRAW);
         initialized = true;
     }
 }
 
-void geometry::vertex(glm::vec3 v)
+void geometry::add_vertex(vertex v)
 {
     vertices.push_back(v);
 }
 
-void geometry::face(GLushort a, GLushort b, GLushort c)
+size_t geometry::vertex_count() const
 {
-    indices.push_back(a);
-    indices.push_back(b);
-    indices.push_back(c);
-}
-
-size_t geometry::element_count() const
-{
-    return indices.size();
+    return vertices.size();
 }
 
 GLuint geometry::vertex_buffer() const
@@ -61,14 +53,4 @@ GLuint geometry::vertex_buffer() const
                 "Must be initialized before retrieval of vertex buffer");
     }
     return vbuffer;
-}
-
-GLuint geometry::index_buffer() const
-{
-    if (!initialized)
-    {
-        throw std::runtime_error(
-                "Must be initialized before retrieval of index buffer");
-    }
-    return ibuffer;
 }
