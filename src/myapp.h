@@ -34,6 +34,8 @@ private:
     scene myscene;
 
     object* cube;
+    object* cube2;
+    object* cube3;
 
 
     glm::mat4 projection;

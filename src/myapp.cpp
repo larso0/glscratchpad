@@ -10,7 +10,7 @@
 using gltools::shader;
 
 myapp::myapp(int argc, char** argv) :
-    gla::application(argc, argv), cube(nullptr)
+    gla::application(argc, argv), cube(nullptr), cube2(nullptr), cube3(nullptr)
 {
 }
 
@@ -39,7 +39,15 @@ void myapp::startup()
     program.use();
 
     cube = new object(&cube_geom, &program);
+    cube2 = new object(&cube_geom, &program);
+    cube3 = new object(&cube_geom, &program);
     myscene.add(cube); //Scene takes care of freeing the memory of cube
+    cube->add(cube2);
+    cube->add(cube3);
+    cube2->scale(glm::vec3(0.5f, 2.f, 0.25f));
+    cube2->translate(glm::vec3(1.5f, 0.f, 0.f));
+    cube3->scale(glm::vec3(0.25f, 0.25f, 0.25f));
+    cube3->translate(glm::vec3(-1.5f, 0.f, 0.f));
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);

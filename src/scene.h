@@ -29,13 +29,13 @@ public:
 protected:
     scene_node* parent;
     std::vector<scene_node*> children;
+    glm::mat4 world_matrix;
 
+private:
     glm::quat rotation_quaternion;
     glm::vec3 translation;
     glm::vec3 scale_vector;
-
-    glm::mat4 world_matrix;
-
+    bool default_scale;
     bool needs_update;
     void update_matrices();
 };
