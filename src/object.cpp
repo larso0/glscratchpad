@@ -8,29 +8,36 @@
 #include "object.h"
 #include <stdexcept>
 
-object::object(geometry* geom, material* mater) :
+object::object(geometry* geom, gltools::program* program) :
     scene_node(),
     geom(geom),
-    mater(mater),
+    program(program),
     vertex_attribute_object(0)
 {
     if(geom == nullptr)
     {
         throw std::invalid_argument("Geometry can not be a nullpointer.");
     }
-    if(mater == nullptr)
+    if(program == nullptr)
     {
-        throw std::invalid_argument("Material can not be a nullpointer.");
+        throw std::invalid_argument("Program can not be a nullpointer.");
     }
+
+    position = program->get_attribute_location("position");
+    normal = 0;//program->get_attribute_location("normal");
+    texture_coordinate = 0;//program->get_attribute_location("uv");
+    modelworld = program->get_uniform_location("modelworld");
+    view = program->get_uniform_location("view");
+    projection = program->get_uniform_location("projection");
 
     glGenVertexArrays(1, &vertex_attribute_object);
     geom->initialize();
 
     glBindVertexArray(vertex_attribute_object);
 
-    glEnableVertexAttribArray(mater->position_location());
+    glEnableVertexAttribArray(position);
     glBindBuffer(GL_ARRAY_BUFFER, geom->vertex_buffer());
-    glVertexAttribPointer(mater->position_location(), 3, GL_FLOAT, false, 0, 0);
+    glVertexAttribPointer(position, 3, GL_FLOAT, false, 0, 0);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geom->index_buffer());
 
@@ -43,8 +50,8 @@ object::~object()
 
 void object::render()
 {
-    //TODO: This does not work because of segfault. mater->use_program();
-    glUniformMatrix4fv(mater->modelworld_matrix_location(),
+    program->use();
+    glUniformMatrix4fv(modelworld,
             1, GL_FALSE, glm::value_ptr(world_matrix));
     glBindVertexArray(vertex_attribute_object);
     glDrawElements(GL_TRIANGLES, geom->element_count(), GL_UNSIGNED_SHORT, 0);

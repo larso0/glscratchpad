@@ -15,14 +15,24 @@
 class object : public scene_node
 {
 public:
-    object(geometry* geom, material* mater);
+    object(geometry* geom, gltools::program* program);
     virtual ~object();
 
     void render();
 
 private:
     geometry* geom;
-    material* mater;
+    gltools::program* program;
+
+    //Attributes
+    GLuint position;
+    GLuint normal;
+    GLuint texture_coordinate;
+
+    //Uniforms
+    GLuint modelworld;
+    GLuint view;
+    GLuint projection;
 
     GLuint vertex_attribute_object;
 };

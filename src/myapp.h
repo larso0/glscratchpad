@@ -11,7 +11,7 @@
 #include "application.h"
 #include "shader.h"
 #include "program.h"
-#include "geometry.h"
+#include "cubegeometry.h"
 #include "material.h"
 #include "scene.h"
 #include "object.h"
@@ -30,7 +30,7 @@ private:
     void event(SDL_Event* event);
 
     gltools::program program;
-    geometry cube_geometry;
+    cube_geometry cube_geom;
     scene myscene;
 
     object* cube;

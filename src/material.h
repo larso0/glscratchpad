@@ -14,33 +14,13 @@
 class material
 {
 public:
-    material(gltools::program* program);
+    material();
     virtual ~material();
 
-    void use_program();
-
-    GLuint position_location() const;
-    GLuint normal_location() const;
-    GLuint texture_coordinate_location() const;
-    GLuint modelworld_matrix_location() const;
-    GLuint view_matrix_location() const;
-    GLuint projection_matrix_location() const;
 private:
-    gltools::program* program;
-
-    //Attributes
-    GLuint position;
-    GLuint normal;
-    GLuint texture_coordinate;
-
-    //Uniforms
-    GLuint modelworld;
-    GLuint view;
-    GLuint projection;
-
-    //TODO: glm::vec4 diffuse_color;
-    //TODO: glm::vec4 specular_color;
-    //TODO: GLfloat shine;
+    glm::vec4 diffuse_color;
+    glm::vec4 specular_color;
+    GLfloat shine;
 };
 
 #endif /* SRC_MATERIAL_H_ */

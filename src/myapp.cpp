@@ -38,37 +38,14 @@ void myapp::startup()
     program.link();
     program.use();
 
-    cube_geometry.vertex(glm::vec3(-1.f, -1.f, 1.f));
-    cube_geometry.vertex(glm::vec3(1.f, -1.f, 1.f));
-    cube_geometry.vertex(glm::vec3(1.f, 1.f, 1.f));
-    cube_geometry.vertex(glm::vec3(-1.f, 1.f, 1.f));
-    cube_geometry.vertex(glm::vec3(-1.f, -1.f, -1.f));
-    cube_geometry.vertex(glm::vec3(1.f, -1.f, -1.f));
-    cube_geometry.vertex(glm::vec3(1.f, 1.f, -1.f));
-    cube_geometry.vertex(glm::vec3(-1.f, 1.f, -1.f));
-    cube_geometry.face(0, 1, 2);
-    cube_geometry.face(2, 3, 0);
-    cube_geometry.face(3, 2, 6);
-    cube_geometry.face(6, 7, 3);
-    cube_geometry.face(7, 6, 5);
-    cube_geometry.face(5, 4, 7);
-    cube_geometry.face(4, 0, 3);
-    cube_geometry.face(3, 7, 4);
-    cube_geometry.face(0, 5, 1);
-    cube_geometry.face(4, 5, 0);
-    cube_geometry.face(1, 5, 6);
-    cube_geometry.face(6, 2, 1);
-
-    material mat(&program);
-
-    cube = new object(&cube_geometry, &mat);
+    cube = new object(&cube_geom, &program);
     myscene.add(cube); //Scene takes care of freeing the memory of cube
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 
     view = glm::lookAt(glm::vec3(0.f, 1.f, 3.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f));
-    glUniformMatrix4fv(mat.view_matrix_location(), 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(program.get_uniform_location("view"), 1, GL_FALSE, glm::value_ptr(view));
 }
 
 void myapp::shutdown()
