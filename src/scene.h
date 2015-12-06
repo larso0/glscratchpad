@@ -26,7 +26,7 @@ public:
     void scale(glm::vec3 s);
 
     virtual void render();
-private:
+protected:
     scene_node* parent;
     std::vector<scene_node*> children;
 

@@ -3,11 +3,9 @@
 in vec3 position;
 in vec3 normal;
 in vec2 uv;
-in vec4 color;
 
-uniform vec3 rotation_axis;
-uniform float rotation_angle;
-uniform mat4 modelview;
+uniform mat4 modelworld;
+uniform mat4 view;
 uniform mat4 projection;
 
 out vec3 modelposition;
@@ -27,6 +25,6 @@ vec3 rotate(vec3 vec, vec3 axis, float angle)
 void main()
 {
 	modelposition = position;
-	gl_Position = projection * modelview *
-				  vec4(rotate(position, rotation_axis, rotation_angle), 1);
+	gl_Position = projection * view * modelworld *
+				  vec4(position, 1);
 }

@@ -9,7 +9,7 @@
 #include <stdexcept>
 
 geometry::geometry() :
-    initialized(false), vbuffer(0), ibuffer(0)
+        initialized(false), vbuffer(0), ibuffer(0)
 {
 }
 
@@ -21,13 +21,19 @@ geometry::~geometry()
 
 void geometry::initialize()
 {
-    glGenBuffers(1, &vbuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vbuffer);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size()*sizeof(glm::vec3), vertices.data(), GL_STATIC_DRAW);
+    if (!initialized)
+    {
+        glGenBuffers(1, &vbuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, vbuffer);
+        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3),
+                vertices.data(), GL_STATIC_DRAW);
 
-    glGenBuffers(1, &ibuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, ibuffer);
-    glBufferData(GL_ARRAY_BUFFER, indices.size()*sizeof(GLushort), indices.data(), GL_STATIC_DRAW);
+        glGenBuffers(1, &ibuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, ibuffer);
+        glBufferData(GL_ARRAY_BUFFER, indices.size() * sizeof(GLushort),
+                indices.data(), GL_STATIC_DRAW);
+        initialized = true;
+    }
 }
 
 void geometry::vertex(glm::vec3 v)
@@ -49,18 +55,20 @@ size_t geometry::element_count() const
 
 GLuint geometry::vertex_buffer() const
 {
-    if(!initialized)
+    if (!initialized)
     {
-        throw std::runtime_error("Must be initialized before retrieval of vertex buffer");
+        throw std::runtime_error(
+                "Must be initialized before retrieval of vertex buffer");
     }
     return vbuffer;
 }
 
 GLuint geometry::index_buffer() const
 {
-    if(!initialized)
+    if (!initialized)
     {
-        throw std::runtime_error("Must be initialized before retrieval of index buffer");
+        throw std::runtime_error(
+                "Must be initialized before retrieval of index buffer");
     }
     return ibuffer;
 }

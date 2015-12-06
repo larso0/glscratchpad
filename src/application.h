@@ -27,6 +27,8 @@ protected:
     int argc;
     char** argv;
 
+    SDL_Window* window;
+
     Uint32 sdl_init_flags;
     Uint32 window_flags;
     int gl_major_version, gl_minor_version;
@@ -54,7 +56,6 @@ private:
     bool initialized;
     bool running;
 
-    SDL_Window* window;
     SDL_GLContext gl_context;
 
     void init();

@@ -10,8 +10,7 @@
 using gltools::shader;
 
 myapp::myapp(int argc, char** argv) :
-    gla::application(argc, argv),
-    vao(0), vertex_buffer(0), index_buffer(0)
+    gla::application(argc, argv), cube(nullptr)
 {
 }
 
@@ -22,43 +21,58 @@ void myapp::startup()
 
     shader vshader("vshader.glsl", GL_VERTEX_SHADER);
     vshader.compile();
+    if(!vshader.get_infolog().empty())
+    {
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Vertex shader infolog", vshader.get_infolog().c_str(), window);
+    }
 
     shader fshader("fshader.glsl", GL_FRAGMENT_SHADER);
     fshader.compile();
+    if(!fshader.get_infolog().empty())
+    {
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Fragment shader infolog", fshader.get_infolog().c_str(), window);
+    }
 
     program.attach_shader(vshader);
     program.attach_shader(fshader);
     program.link();
     program.use();
 
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
+    cube_geometry.vertex(glm::vec3(-1.f, -1.f, 1.f));
+    cube_geometry.vertex(glm::vec3(1.f, -1.f, 1.f));
+    cube_geometry.vertex(glm::vec3(1.f, 1.f, 1.f));
+    cube_geometry.vertex(glm::vec3(-1.f, 1.f, 1.f));
+    cube_geometry.vertex(glm::vec3(-1.f, -1.f, -1.f));
+    cube_geometry.vertex(glm::vec3(1.f, -1.f, -1.f));
+    cube_geometry.vertex(glm::vec3(1.f, 1.f, -1.f));
+    cube_geometry.vertex(glm::vec3(-1.f, 1.f, -1.f));
+    cube_geometry.face(0, 1, 2);
+    cube_geometry.face(2, 3, 0);
+    cube_geometry.face(3, 2, 6);
+    cube_geometry.face(6, 7, 3);
+    cube_geometry.face(7, 6, 5);
+    cube_geometry.face(5, 4, 7);
+    cube_geometry.face(4, 0, 3);
+    cube_geometry.face(3, 7, 4);
+    cube_geometry.face(0, 5, 1);
+    cube_geometry.face(4, 5, 0);
+    cube_geometry.face(1, 5, 6);
+    cube_geometry.face(6, 2, 1);
 
-    glGenBuffers(1, &vertex_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    material mat(program);
 
-    glGenBuffers(1, &index_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, index_buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    cube = new object(cube_geometry, mat);
+    myscene.add(cube); //Scene takes care of freeing the memory of cube
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 
     view = glm::lookAt(glm::vec3(0.f, 1.f, 3.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f));
-    GLint modelview_location = program.get_uniform_location("modelview");
-    glUniformMatrix4fv(modelview_location, 1, GL_FALSE, glm::value_ptr(view));
-
-    GLint rotation_axis_location = program.get_uniform_location("rotation_axis");
-    GLfloat rotation_axis[] = {0.9f, 0.7f, 0.f};
-    glUniform3fv(rotation_axis_location, 1, rotation_axis);
+    glUniformMatrix4fv(mat.view_matrix_location(), 1, GL_FALSE, glm::value_ptr(view));
 }
 
 void myapp::shutdown()
 {
-    glDeleteBuffers(1, &vertex_buffer);
-    glDeleteBuffers(1, &index_buffer);
-    glDeleteVertexArrays(1, &vao);
 }
 
 void myapp::resize(int w, int h)
@@ -71,17 +85,9 @@ void myapp::resize(int w, int h)
 
 void myapp::update(float delta)
 {
-    GLint rotation_angle_location = program.get_uniform_location("rotation_angle");
-    glUniform1f(rotation_angle_location, rotation);
-
     glClearColor(0.f, 0.f, 0.f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    GLint position_location = program.get_attribute_location("position");
-    glEnableVertexAttribArray(position_location);
-    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-    glVertexAttribPointer(position_location, 3, GL_FLOAT, false, 0, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
-    glDrawElements(GL_TRIANGLES, element_count, GL_UNSIGNED_SHORT, 0);
+    myscene.render();
     swap_buffers();
 }
 
@@ -89,8 +95,10 @@ void myapp::mouse_motion(SDL_MouseMotionEvent* event)
 {
     if(mouse_button_down)
     {
+        float sensitivity = 0.01;
         int x = event->xrel;
-        rotation += x / 1000.f;
+        int y = event->yrel;
+        cube->rotate_euler(glm::vec3(sensitivity*y, sensitivity*x, 0.f));
     }
 }
 

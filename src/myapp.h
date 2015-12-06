@@ -11,6 +11,10 @@
 #include "application.h"
 #include "shader.h"
 #include "program.h"
+#include "geometry.h"
+#include "material.h"
+#include "scene.h"
+#include "object.h"
 
 class myapp : public gla::application
 {
@@ -25,30 +29,12 @@ private:
     void mouse_motion(SDL_MouseMotionEvent* event);
     void event(SDL_Event* event);
 
-    GLuint vao; //Vertex attribute object
     gltools::program program;
+    geometry cube_geometry;
+    scene myscene;
 
-    int element_count = 36;
-    glm::vec3 vertices[8] = {
-            glm::vec3(-1.f, -1.f, 1.f),
-            glm::vec3(1.f, -1.f, 1.f),
-            glm::vec3(1.f, 1.f, 1.f),
-            glm::vec3(-1.f, 1.f, 1.f),
-            glm::vec3(-1.f, -1.f, -1.f),
-            glm::vec3(1.f, -1.f, -1.f),
-            glm::vec3(1.f, 1.f, -1.f),
-            glm::vec3(-1.f, 1.f, -1.f)
-    };
-    GLushort indices[36] = {
-            0, 1, 2, 2, 3, 0,
-            3, 2, 6, 6, 7, 3,
-            7, 6, 5, 5, 4, 7,
-            4, 0, 3, 3, 7, 4,
-            0, 5, 1, 4, 5, 0,
-            1, 5, 6, 6, 2, 1
-    };
-    GLuint vertex_buffer;
-    GLuint index_buffer;
+    object* cube;
+
 
     glm::mat4 projection;
     glm::mat4 view;
