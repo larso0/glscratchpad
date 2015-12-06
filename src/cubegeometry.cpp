@@ -9,14 +9,14 @@
 
 cube_geometry::cube_geometry()
 {
-    vertex(glm::vec3(-1.f, -1.f, 1.f));
-    vertex(glm::vec3(1.f, -1.f, 1.f));
-    vertex(glm::vec3(1.f, 1.f, 1.f));
-    vertex(glm::vec3(-1.f, 1.f, 1.f));
-    vertex(glm::vec3(-1.f, -1.f, -1.f));
-    vertex(glm::vec3(1.f, -1.f, -1.f));
-    vertex(glm::vec3(1.f, 1.f, -1.f));
-    vertex(glm::vec3(-1.f, 1.f, -1.f));
+    vertex(glm::vec3(-0.5f, -0.5f, 0.5f));
+    vertex(glm::vec3(0.5f, -0.5f, 0.5f));
+    vertex(glm::vec3(0.5f, 0.5f, 0.5f));
+    vertex(glm::vec3(-0.5f, 0.5f, 0.5f));
+    vertex(glm::vec3(-0.5f, -0.5f, -0.5f));
+    vertex(glm::vec3(0.5f, -0.5f, -0.5f));
+    vertex(glm::vec3(0.5f, 0.5f, -0.5f));
+    vertex(glm::vec3(-0.5f, 0.5f, -0.5f));
     face(0, 1, 2);
     face(2, 3, 0);
     face(3, 2, 6);

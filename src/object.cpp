@@ -12,6 +12,12 @@ object::object(geometry* geom, gltools::program* program) :
     scene_node(),
     geom(geom),
     program(program),
+    position(0),
+    normal(1),
+    texture_coordinate(2),
+    modelworld(0),
+    view(1),
+    projection(2),
     vertex_attribute_object(0)
 {
     if(geom == nullptr)
@@ -22,13 +28,6 @@ object::object(geometry* geom, gltools::program* program) :
     {
         throw std::invalid_argument("Program can not be a nullpointer.");
     }
-
-    position = program->get_attribute_location("position");
-    normal = 0;//program->get_attribute_location("normal");
-    texture_coordinate = 0;//program->get_attribute_location("uv");
-    modelworld = program->get_uniform_location("modelworld");
-    view = program->get_uniform_location("view");
-    projection = program->get_uniform_location("projection");
 
     glGenVertexArrays(1, &vertex_attribute_object);
     geom->initialize();
@@ -46,6 +45,7 @@ object::object(geometry* geom, gltools::program* program) :
 
 object::~object()
 {
+    glDeleteVertexArrays(1, &vertex_attribute_object);
 }
 
 void object::render()
