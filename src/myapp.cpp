@@ -52,7 +52,7 @@ void myapp::startup()
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 
-    view = glm::lookAt(glm::vec3(0.f, 1.f, 3.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f));
+    view = glm::lookAt(glm::vec3(0.f, 2.f, 3.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f));
     glUniformMatrix4fv(program.get_uniform_location("view"), 1, GL_FALSE, glm::value_ptr(view));
 }
 

@@ -79,9 +79,8 @@ void scene_node::update_matrices()
 {
     glm::mat4 local_matrix = glm::translate(glm::mat4(), translation)
             * glm::mat4_cast(rotation_quaternion);
-    world_matrix =
-            parent != nullptr ?
-                    parent->world_matrix * local_matrix : local_matrix;
+    world_matrix = parent != nullptr ?
+                   parent->world_matrix * local_matrix : local_matrix;
 
     for (scene_node* child : children)
     {
