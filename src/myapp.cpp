@@ -36,7 +36,6 @@ void myapp::startup()
     program.attach_shader(vshader);
     program.attach_shader(fshader);
     program.link();
-    program.use();
 
     cube = new object(&cube_geom, &program);
     cube2 = new object(&cube_geom, &program);

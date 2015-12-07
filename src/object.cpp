@@ -29,6 +29,7 @@ object::object(geometry* geom, gltools::program* program) :
         throw std::invalid_argument("Program can not be a nullpointer.");
     }
 
+    program->use();
     glGenVertexArrays(1, &vertex_attribute_object);
     geom->initialize();
 
