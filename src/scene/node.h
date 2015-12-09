@@ -17,7 +17,7 @@ namespace scene
 class node
 {
 public:
-    node(node* parent);
+    node(node* parent = nullptr);
     virtual ~node();
 
     void set_parent(node* parent);

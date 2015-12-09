@@ -1,11 +1,12 @@
 /*
  * shader.cpp
  *
- *  Created on: 21. nov. 2015
+ *  Created on: 9. des. 2015
  *      Author: larso
  */
 
 #include "shader.h"
+
 #include <fstream>
 #include <stdexcept>
 
@@ -39,61 +40,61 @@ std::string shader_info_log(GLuint shader)
     return log;
 }
 
-namespace gltools
+namespace scene
 {
 
 shader::shader(std::string file, GLenum shader_type) :
         shader_type(shader_type),
-        object_id(0),
+        id(0),
         compiled(false)
 {
-    source = file_to_string(file);
+    src = file_to_string(file);
 }
 
 shader::~shader()
 {
     if(compiled)
     {
-        glDeleteShader(object_id);
+        glDeleteShader(id);
     }
 }
 
 void shader::compile()
 {
-    object_id = glCreateShader(shader_type);
-    const GLchar* src = source.c_str();
-    glShaderSource(object_id, 1, &src, nullptr);
+    id = glCreateShader(shader_type);
+    const GLchar* csrc = src.c_str();
+    glShaderSource(id, 1, &csrc, nullptr);
 
-    glCompileShader(object_id);
+    glCompileShader(id);
     GLint compile_status = 0;
-    glGetShaderiv(object_id, GL_COMPILE_STATUS, &compile_status);
-    infolog = shader_info_log(object_id);
+    glGetShaderiv(id, GL_COMPILE_STATUS, &compile_status);
+    log = shader_info_log(id);
     if (compile_status == GL_FALSE)
     {
-        glDeleteShader(object_id);
-        throw std::runtime_error("Unable to compile shader: " + infolog);
+        glDeleteShader(id);
+        throw std::runtime_error("Unable to compile shader: " + log);
     }
 
     compiled = true;
 }
 
-GLuint shader::get_object_id() const
+GLuint shader::object_id() const
 {
     if(!compiled)
     {
         throw std::runtime_error("Shader must be compiled before retrieval of object id.");
     }
-    return object_id;
+    return id;
 }
 
-const std::string& shader::get_source() const
+const std::string& shader::source() const
 {
-    return source;
+    return src;
 }
 
-const std::string& shader::get_infolog() const
+const std::string& shader::infolog() const
 {
-    return infolog;
+    return log;
 }
 
-} /* namespace gltools */
+} /* namespace scene */

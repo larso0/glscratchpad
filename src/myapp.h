@@ -9,12 +9,12 @@
 #define MYAPP_H_
 
 #include "application.h"
-#include "shader.h"
-#include "program.h"
-#include "cubegeometry.h"
-#include "material.h"
-#include "scene.h"
-#include "object.h"
+#include "scene/shader.h"
+#include "scene/shader_program.h"
+#include "scene/cubegeometry.h"
+#include "scene/material.h"
+#include "scene/node.h"
+#include "scene/object.h"
 
 class myapp : public gla::application
 {
@@ -29,13 +29,14 @@ private:
     void mouse_motion(SDL_MouseMotionEvent* event);
     void event(SDL_Event* event);
 
-    gltools::program program;
-    cube_geometry cube_geom;
-    scene myscene;
+    scene::shader_program program;
+    scene::cube_geometry* cube_geom = nullptr;
+    scene::material* material = nullptr;
+    scene::node myscene;
 
-    object* cube;
-    object* cube2;
-    object* cube3;
+    scene::object* cube = nullptr;
+    scene::object* cube2 = nullptr;
+    scene::object* cube3 = nullptr;
 
     glm::mat4 projection;
     glm::mat4 view;

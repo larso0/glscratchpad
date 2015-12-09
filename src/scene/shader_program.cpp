@@ -1,12 +1,12 @@
 /*
- * program.cpp
+ * shader_program.cpp
  *
  *  Created on: 21. nov. 2015
  *      Author: larso
  */
 
-#include "program.h"
 #include <stdexcept>
+#include "shader_program.h"
 
 std::string program_info_log(GLuint shader)
 {
@@ -19,75 +19,75 @@ std::string program_info_log(GLuint shader)
     return log;
 }
 
-namespace gltools
+namespace scene
 {
 
-program::program() :
+shader_program::shader_program() :
         shaders_attached(false),
-        object_id(0),
+        id(0),
         linked(false)
 {
 }
 
-program::~program()
+shader_program::~shader_program()
 {
-    glDeleteProgram(object_id);
+    glDeleteProgram(id);
 }
 
-void program::attach_shader(const shader& shdr)
+void shader_program::attach_shader(const shader& shdr)
 {
     if(!shaders_attached)
     {
-        object_id = glCreateProgram();
+        id = glCreateProgram();
         shaders_attached = true;
     }
-    glAttachShader(object_id, shdr.get_object_id());
+    glAttachShader(id, shdr.object_id());
 }
 
-void program::link()
+void shader_program::link()
 {
     if(!shaders_attached)
     {
         throw std::runtime_error("Shaders need to be attached before linking program.");
     }
-    glLinkProgram(object_id);
+    glLinkProgram(id);
     GLint link_status = 0;
-    glGetProgramiv(object_id, GL_LINK_STATUS, &link_status);
-    infolog = program_info_log(object_id);
+    glGetProgramiv(id, GL_LINK_STATUS, &link_status);
+    log = program_info_log(id);
     if (link_status == GL_FALSE)
     {
-        throw std::runtime_error("Unable to link program: " + infolog);
+        throw std::runtime_error("Unable to link program: " + log);
     }
 
     linked = true;
 }
 
-GLuint program::get_object_id() const
+GLuint shader_program::object_id() const
 {
     if(!shaders_attached)
     {
         throw std::runtime_error("Shaders need to be attached before retrieval of object id.");
     }
-    return object_id;
+    return id;
 }
 
-const std::string& program::get_infolog() const
+const std::string& shader_program::infolog() const
 {
-    return infolog;
+    return log;
 }
 
-void program::use()
+void shader_program::use()
 {
     if(!(shaders_attached && linked))
     {
         throw std::runtime_error("Program must be linked before usage.");
     }
-    glUseProgram(object_id);
+    glUseProgram(id);
 }
 
-GLint program::get_attribute_location(std::string attribute_name)
+GLint shader_program::attribute_location(std::string attribute_name)
 {
-    GLint loc = glGetAttribLocation(object_id, attribute_name.c_str());
+    GLint loc = glGetAttribLocation(id, attribute_name.c_str());
     if(loc == -1)
     {
         throw std::runtime_error("Could not get attribute location for attribute with name \"" + attribute_name + "\".");
@@ -95,9 +95,9 @@ GLint program::get_attribute_location(std::string attribute_name)
     return loc;
 }
 
-GLint program::get_uniform_location(std::string uniform_name)
+GLint shader_program::uniform_location(std::string uniform_name)
 {
-    GLint loc = glGetUniformLocation(object_id, uniform_name.c_str());
+    GLint loc = glGetUniformLocation(id, uniform_name.c_str());
     if(loc == -1)
     {
         throw std::runtime_error("Could not get uniform location for uniform with name \"" + uniform_name + "\".");
@@ -105,4 +105,4 @@ GLint program::get_uniform_location(std::string uniform_name)
     return loc;
 }
 
-} /* namespace gltools */
+} /* namespace scene */

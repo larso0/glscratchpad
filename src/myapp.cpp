@@ -7,10 +7,10 @@
 
 #include "myapp.h"
 
-using gltools::shader;
+using scene::shader;
 
 myapp::myapp(int argc, char** argv) :
-    gla::application(argc, argv), cube(nullptr), cube2(nullptr), cube3(nullptr)
+    gla::application(argc, argv)
 {
 }
 
@@ -21,25 +21,28 @@ void myapp::startup()
 
     shader vshader("vshader.glsl", GL_VERTEX_SHADER);
     vshader.compile();
-    if(!vshader.get_infolog().empty())
+    if(!vshader.infolog().empty())
     {
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Vertex shader infolog", vshader.get_infolog().c_str(), window);
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Vertex shader infolog", vshader.infolog().c_str(), window);
     }
 
     shader fshader("fshader.glsl", GL_FRAGMENT_SHADER);
     fshader.compile();
-    if(!fshader.get_infolog().empty())
+    if(!fshader.infolog().empty())
     {
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Fragment shader infolog", fshader.get_infolog().c_str(), window);
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Fragment shader infolog", fshader.infolog().c_str(), window);
     }
 
     program.attach_shader(vshader);
     program.attach_shader(fshader);
     program.link();
 
-    cube = new object(&cube_geom, &program);
-    cube2 = new object(&cube_geom, &program);
-    cube3 = new object(&cube_geom, &program);
+    cube_geom = new scene::cube_geometry();
+    material = new scene::material(&program);
+
+    cube = new scene::object(cube_geom, material);
+    cube2 = new scene::object(cube_geom, material);
+    cube3 = new scene::object(cube_geom, material);
     myscene.add(cube);
     cube->add(cube2);
     cube->add(cube3);
@@ -52,7 +55,7 @@ void myapp::startup()
     glEnable(GL_CULL_FACE);
 
     view = glm::lookAt(glm::vec3(0.f, 2.f, 3.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f));
-    glUniformMatrix4fv(program.get_uniform_location("view"), 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(program.uniform_location("view_matrix"), 1, GL_FALSE, glm::value_ptr(view));
 }
 
 void myapp::shutdown()
@@ -60,13 +63,15 @@ void myapp::shutdown()
     delete cube;
     delete cube2;
     delete cube3;
+    delete cube_geom;
+    delete material;
 }
 
 void myapp::resize(int w, int h)
 {
     glViewport(0, 0, w, h);
     projection = glm::perspective(glm::radians(60.f), (float)w/h, 0.1f, 100.f);
-    GLint projection_location = program.get_uniform_location("projection");
+    GLint projection_location = program.uniform_location("projection_matrix");
     glUniformMatrix4fv(projection_location, 1, GL_FALSE, glm::value_ptr(projection));
 }
 
