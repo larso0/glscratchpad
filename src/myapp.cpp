@@ -38,7 +38,8 @@ void myapp::startup()
     program.link();
 
     cube_geom = new scene::cube_geometry();
-    material = new scene::material(&program);
+    material = new mymaterial(&program);
+    material->diffuse = glm::vec3(1.f, 0.5f, 0.3f);
 
     cube = new scene::object(cube_geom, material);
     cube2 = new scene::object(cube_geom, material);
@@ -50,12 +51,17 @@ void myapp::startup()
     cube2->translate(glm::vec3(1.5f, 0.f, 0.f));
     cube3->scale(glm::vec3(0.25f, 0.25f, 0.25f));
     cube3->translate(glm::vec3(-1.5f, 0.f, 0.f));
+    light = new scene::point_light(3, 5);
+    cube2->add(light);
+    light->translate(glm::vec3(0.f, -2.5f, 0.f));
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 
     view = glm::lookAt(glm::vec3(0.f, 2.f, 3.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f));
     glUniformMatrix4fv(program.uniform_location("view_matrix"), 1, GL_FALSE, glm::value_ptr(view));
+    glm::vec3 ambient(0.1f, 0.1f, 0.1f);
+    glUniform3fv(4, 1, glm::value_ptr(ambient));
 }
 
 void myapp::shutdown()
@@ -65,6 +71,7 @@ void myapp::shutdown()
     delete cube3;
     delete cube_geom;
     delete material;
+    delete light;
 }
 
 void myapp::resize(int w, int h)
@@ -79,6 +86,7 @@ void myapp::update(float delta)
 {
     glClearColor(0.f, 0.f, 0.f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    light->send_data();
     myscene.render();
     swap_buffers();
 }

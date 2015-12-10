@@ -13,8 +13,7 @@ namespace scene
 {
 
 node::node(node* parent) :
-        parent(parent), scale_vector(glm::vec3(1.f, 1.f, 1.f)), default_scale(
-                true), needs_update(false)
+        parent(parent), scale_vector(1.f, 1.f, 1.f), default_scale(true), needs_update(true)
 {
     if (parent != nullptr)
     {
@@ -102,14 +101,13 @@ void node::update()
 
     if(parent != nullptr)
     {
-        pos = parent->pos + translation;
         world_matrix = parent->world_matrix * local_matrix;
     }
     else
     {
-        pos = translation;
         world_matrix = local_matrix;
     }
+    pos = glm::vec3(world_matrix * glm::vec4(0.f, 0.f, 0.f, 1.f));
 
     for (node* child : children)
     {

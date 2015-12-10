@@ -42,6 +42,7 @@ object::~object()
 void object::render()
 {
     mat->program()->use();
+    mat->send_data();
     glUniformMatrix4fv(world_matrix_loc, 1, GL_FALSE, glm::value_ptr(world_matrix));
     geom->draw();
     node::render();
